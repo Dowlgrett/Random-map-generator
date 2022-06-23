@@ -1,8 +1,18 @@
 ﻿
 Map map = new(150, 50);
-map.GenerateNoise(map, density: 0.57);
-map.GenerateWithCellularAutomata(map, 4);
-map.Render();
+
+
+
+while (true)
+{
+    Console.SetCursorPosition(0, 0);
+    map.GenerateNoise(map, density: 0.57);
+    map.GenerateWithCellularAutomata(map, 4);
+
+    map.Render();
+    Console.ReadKey();
+}
+
 
 
 
@@ -16,14 +26,16 @@ public class Map
 
     public void Render()
     {
+        string map = "";
         for (int row = 0; row < Tiles.GetLength(1); row++)
         {
             for (int column = 0; column < Tiles.GetLength(0); column++)
             {
-                Console.Write(Tiles[column, row].Symbol);
+                map += Tiles[column, row].Symbol;
             }
-            Console.WriteLine();
+            map += '\n';         
         }
+        Console.WriteLine(map);
     }
 
     public Map(int width, int height)
@@ -141,7 +153,7 @@ public class EmptyTile : Tile
 
 public class WallTile : Tile
 {
-    public override char Symbol { get; init; } = '\u2593';
+    public override char Symbol { get; init; } = '\u2588';
 }
 
 public class Walker
@@ -177,10 +189,10 @@ public class Walker
             _ => throw new ArgumentException(),
         };
 
-        if (newPosition.x == Map.Tiles.GetLength(0) - 1) newPosition.x = 1;
-        if (newPosition.y == Map.Tiles.GetLength(1) - 1) newPosition.y = 1;
-        if (newPosition.x == 0) newPosition.x = Map.Tiles.GetLength(0) - 2;
-        if (newPosition.y == 0) newPosition.y = Map.Tiles.GetLength(1) - 2;
+        if (newPosition.x >= Map.Tiles.GetLength(0) - 2) newPosition.x = 1;
+        if (newPosition.y >= Map.Tiles.GetLength(1) - 2) newPosition.y = 1;
+        if (newPosition.x <= 0) newPosition.x = Map.Tiles.GetLength(0) - 2;
+        if (newPosition.y <= 0) newPosition.y = Map.Tiles.GetLength(1) - 2;
 
 
         return newPosition;
